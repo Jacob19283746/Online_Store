@@ -1,151 +1,162 @@
-# 🛒 Online Store API
+# Online Store API
 
-Современное REST API для интернет-магазина, построенное на FastAPI с использованием SQLAlchemy и SQLite.
+Production-ready REST API для интернет-магазина, построенное на FastAPI с использованием SQLAlchemy и SQLite.
 
-## 🚀 Особенности
+## Быстрый старт
 
-- **FastAPI** - современный, быстрый веб-фреймворк для создания API
-- **SQLAlchemy** - мощная ORM для работы с базой данных
-- **Alembic** - система миграций для управления схемой БД
-- **Pydantic** - валидация данных и сериализация
-- **Иерархические категории** - поддержка вложенных категорий товаров
-- **RESTful API** - стандартизированные эндпоинты
-- **Автоматическая документация** - Swagger UI и ReDoc
-
-## 📋 Функциональность
-
-### Товары (Products)
-- ✅ Получение всех активных товаров
-- ✅ Создание нового товара
-- ✅ Получение товаров по категории
-- ✅ Детальная информация о товаре
-- ✅ Обновление товара
-- ✅ Мягкое удаление товара
-
-### Категории (Categories)
-- ✅ Создание категории
-- ✅ Получение всех активных категорий
-- ✅ Обновление категории
-- ✅ Мягкое удаление категории
-- ✅ Поддержка иерархической структуры
-
-## 🛠 Технологический стек
-
-- **Python 3.11+**
-- **FastAPI 0.115.0**
-- **SQLAlchemy 2.0.35**
-- **Pydantic 2.9.2**
-- **Alembic** - миграции
-- **SQLite** - база данных
-- **Uvicorn** - ASGI сервер
-
-## 📦 Установка и запуск
-
-### 1. Клонирование репозитория
 ```bash
+# Клонирование репозитория
 git clone https://github.com/Jacob19283746/Online_Store.git
 cd Online_Store
-```
 
-### 2. Создание виртуального окружения
-```bash
+# Создание виртуального окружения
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
-# или
-venv\Scripts\activate     # Windows
-```
+# или venv\Scripts\activate для Windows
 
-### 3. Установка зависимостей
-```bash
+# Установка зависимостей
 pip install -r requirements.txt
-```
 
-### 4. Применение миграций
-```bash
+# Применение миграций
 alembic upgrade head
-```
 
-### 5. Запуск приложения
-```bash
+# Запуск приложения
 uvicorn app.main:app --reload
 ```
 
-Приложение будет доступно по адресу: `http://localhost:8000`
+API будет доступно по адресу: `http://localhost:8000`
 
-## 📚 API Документация
+## Документация
 
 После запуска приложения документация API доступна по следующим адресам:
 
 - **Swagger UI**: `http://localhost:8000/docs`
 - **ReDoc**: `http://localhost:8000/redoc`
 
-## 🗂 Структура проекта
+## Архитектура
+
+Проект следует принципам чистой архитектуры и разделения ответственности:
 
 ```
 Online_Store/
 ├── app/
-│   ├── __init__.py
 │   ├── main.py                 # Точка входа приложения
-│   ├── schemas.py              # Pydantic схемы
+│   ├── schemas.py              # Pydantic схемы для валидации
 │   ├── backend/
-│   │   ├── db.py              # Конфигурация базы данных
-│   │   └── db_depends.py      # Зависимости для работы с БД
-│   ├── models/
-│   │   ├── __init__.py
-│   │   ├── category.py        # Модель категории
-│   │   └── products.py        # Модель товара
-│   ├── routers/
-│   │   ├── __init__.py
-│   │   ├── category.py        # API для категорий
-│   │   └── products.py        # API для товаров
-│   └── migrations/            # Alembic миграции
-├── requirements.txt           # Зависимости Python
-├── alembic.ini               # Конфигурация Alembic
-└── README.md                 # Документация
+│   │   ├── db.py               # Конфигурация базы данных
+│   │   └── db_depends.py       # Зависимости для работы с БД
+│   ├── models/                 # SQLAlchemy модели
+│   │   ├── category.py
+│   │   └── products.py
+│   ├── routers/                # API эндпоинты
+│   │   ├── category.py
+│   │   └── products.py
+│   └── migrations/             # Alembic миграции
+├── tests/                      # Тесты
+├── requirements.txt
+├── alembic.ini
+└── README.md
 ```
 
-## 🔧 API Эндпоинты
+## Технологический стек
+
+- **Python 3.11+**
+- **FastAPI 0.115.0** - современный веб-фреймворк
+- **SQLAlchemy 2.0.35** - ORM для работы с БД
+- **Pydantic 2.9.2** - валидация данных
+- **Alembic** - система миграций
+- **SQLite** - база данных (легко заменить на PostgreSQL)
+- **Uvicorn** - ASGI сервер
+
+## API Эндпоинты
 
 ### Товары
-- `GET /products/` - Получить все активные товары
-- `POST /products/create` - Создать новый товар
-- `GET /products/{category_slug}` - Получить товары по категории
-- `GET /products/detail/{product_slug}` - Получить детали товара
-- `PUT /products/detail/{product_slug}` - Обновить товар
-- `DELETE /products/delete?product_id={id}` - Удалить товар
+
+| Метод    | Эндпоинт                                     | Описание                                    |
+|----------|----------------------------------------------|---------------------------------------------|
+| `GET`    | `/api/v1/products/`                          | Получить все активные товары (с пагинацией) |
+| `POST`   | `/api/v1/products/create`                    | Создать новый товар                         |
+| `GET`    | `/api/v1/products/category/{category_slug}`  | Получить товары по категории                |
+| `GET`    | `/api/v1/products/detail/{product_slug}`     | Получить детали товара                      |
+| `PUT`    | `/api/v1/products/detail/{product_slug}`     | Обновить товар                              |
+| `DELETE` | `/api/v1/products/delete/{product_id}`       | Мягкое удаление товара                      |
 
 ### Категории
-- `POST /category/create` - Создать новую категорию
-- `GET /category/all_categories` - Получить все активные категории
-- `PUT /category/update_category?category_id={id}` - Обновить категорию
-- `DELETE /category/delete?category_id={id}` - Удалить категорию
 
-## 📊 Модели данных
+| Метод    | Эндпоинт                                | Описание                        |
+|----------|-----------------------------------------|---------------------------------|
+| `POST`   | `/api/v1/category/create`               | Создать новую категорию         |
+| `GET`    | `/api/v1/category/all_categories`       | Получить все активные категории |
+| `GET`    | `/api/v1/category/{category_id}`        | Получить категорию по ID        |
+| `GET`    | `/api/v1/category/slug/{category_slug}` | Получить категорию по slug      |
+| `PUT`    | `/api/v1/category/update/{category_id}` | Обновить категорию              |
+| `DELETE` | `/api/v1/category/delete/{category_id}` | Мягкое удаление категории       |
 
-### Product (Товар)
-- `id` - Уникальный идентификатор
-- `name` - Название товара
-- `slug` - URL-дружественное название
-- `description` - Описание товара
-- `price` - Цена (в копейках)
-- `image_url` - URL изображения
-- `stock` - Количество на складе
-- `category_id` - ID категории
-- `rating` - Рейтинг товара
-- `is_active` - Активен ли товар
+## Тестирование
 
-### Category (Категория)
-- `id` - Уникальный идентификатор
-- `name` - Название категории
-- `slug` - URL-дружественное название
-- `is_active` - Активна ли категория
-- `parent_id` - ID родительской категории (для иерархии)
+Проект включает полный набор тестов с покрытием основных сценариев:
 
-## 🧪 Примеры использования
+```bash
+# Запуск всех тестов
+pytest
+
+# Запуск с подробным выводом
+pytest -v
+
+# Запуск конкретного теста
+pytest tests/test_products.py::test_create_product
+```
+
+## Миграции базы данных
+
+```bash
+# Создание новой миграции
+alembic revision --autogenerate -m "Описание изменений"
+
+# Применение миграций
+alembic upgrade head
+
+# Откат миграции
+alembic downgrade -1
+```
+
+## Развертывание
+
+### Локальная разработка
+
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+### Продакшн
+
+```bash
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
+```
+
+Для продакшн окружения рекомендуется:
+- Использовать PostgreSQL вместо SQLite
+- Настроить переменные окружения для конфигурации
+- Использовать reverse proxy (nginx)
+- Настроить мониторинг и логирование
+
+## Основные возможности
+
+- Полный CRUD для товаров и категорий
+- Иерархическая структура категорий
+- Мягкое удаление (soft delete)
+- Валидация данных с Pydantic
+- Автоматическая документация API
+- Пагинация для списков
+- Обработка ошибок
+- CORS поддержка
+
+## Примеры использования
 
 ### Создание категории
+
 ```bash
-curl -X POST "http://localhost:8000/category/create" \
+curl -X POST "http://localhost:8000/api/v1/category/create" \
      -H "Content-Type: application/json" \
      -d '{
        "name": "Электроника",
@@ -154,8 +165,9 @@ curl -X POST "http://localhost:8000/category/create" \
 ```
 
 ### Создание товара
+
 ```bash
-curl -X POST "http://localhost:8000/products/create" \
+curl -X POST "http://localhost:8000/api/v1/products/create" \
      -H "Content-Type: application/json" \
      -d '{
        "name": "iPhone 15",
@@ -167,27 +179,6 @@ curl -X POST "http://localhost:8000/products/create" \
      }'
 ```
 
-## 🔄 Миграции
-
-Для создания новой миграции:
-```bash
-alembic revision --autogenerate -m "Описание изменений"
-```
-
-Для применения миграций:
-```bash
-alembic upgrade head
-```
-
-## 🚀 Развертывание
-
-### Локальная разработка
-```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-### Продакшн
-```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
-```
+## Автор 
+- #### [Jacob Grigorev](https://github.com/Jacob19283746/)
 

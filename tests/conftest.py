@@ -5,10 +5,11 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from app.main import app
-from app.backend.db import Base, get_db
+from app.backend.db import Base
+from app.backend.db_depends import get_db
 
 # Создаем тестовую базу данных в памяти
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
@@ -27,9 +28,9 @@ def override_get_db():
         db.close()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def setup_database():
-    """Создаем тестовую базу данных"""
+    """Создаем тестовую базу данных для каждого теста"""
     Base.metadata.create_all(bind=engine)
     yield
     Base.metadata.drop_all(bind=engine)
